@@ -31,12 +31,12 @@ func (wgm *WGManager) GetPublicKey() (iface.PublicKey, error) {
 	if wgDevice == nil || err != nil {
 		return iface.PublicKey{}, err
 	}
-	return iface.PublicKey{wgDevice.PublicKey}, nil
+	return iface.PublicKey{Key: wgDevice.PublicKey}, nil
 }
 
 func (wgm *WGManager) GeneratePrivateKey() (iface.PrivateKey, error) {
 	privateKey, err := wgtypes.GeneratePrivateKey()
-	return iface.PrivateKey{privateKey}, err
+	return iface.PrivateKey{Key: privateKey}, err
 }
 
 func (wgm *WGManager) ConfigureWG(ctx context.Context, peers []iface.Peer) error {
@@ -44,7 +44,7 @@ func (wgm *WGManager) ConfigureWG(ctx context.Context, peers []iface.Peer) error
 
 	for _, peer := range peers {
 		wgPeer := wgtypes.PeerConfig{
-			PublicKey:         peer.PublicKey,
+			PublicKey:         peer.PublicKey.Key,
 			ReplaceAllowedIPs: true,
 			AllowedIPs:        peer.AllowedIPs,
 		}
@@ -69,7 +69,7 @@ func (wgm *WGManager) AddPeers(ctx context.Context, peers []iface.Peer) error {
 		wgPeers = append(wgPeers, wgtypes.PeerConfig{
 			Remove:            false,
 			UpdateOnly:        false,
-			PublicKey:         peer.PublicKey,
+			PublicKey:         peer.PublicKey.Key,
 			ReplaceAllowedIPs: true,
 			AllowedIPs:        peer.AllowedIPs,
 		})

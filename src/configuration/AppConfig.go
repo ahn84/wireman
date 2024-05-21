@@ -25,6 +25,7 @@ func InitializeAppConfig() {
 
 	viper.SetDefault(CFG_APPLICATION_NAME, "GoApp")
 	viper.SetDefault(CFG_CONFIGURATION_PROFILES, []string{})
+	viper.SetDefault("server.port", "8080")
 
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")

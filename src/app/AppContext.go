@@ -48,13 +48,14 @@ func AppShutdown(c context.Context) error {
 // doInit_ initialize app components like services and controllers, resolving their dependencies properly
 func doInit_(c *configuration.AppContext) {
 	ctx := context.Background()
-	c.HttpSvc = impl.NewHttpService()
-	c.HttpSvc.Initialize(ctx)
 	svc, err := impl.NewWGManager("wg0")
 	if err != nil {
 		slog.Warn("Init wireguard manager", "error", err)
+	} else {
+		c.Wireguard = svc
+		c.Wireguard.Initialize(ctx)
 	}
-	c.Wireguard = svc
-	c.Wireguard.Initialize(ctx)
 
+	c.HttpSvc = impl.NewHttpService(c.Wireguard)
+	c.HttpSvc.Initialize(ctx)
 }
