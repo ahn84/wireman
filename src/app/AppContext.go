@@ -50,7 +50,11 @@ func doInit_(c *configuration.AppContext) {
 	ctx := context.Background()
 	c.HttpSvc = impl.NewHttpService()
 	c.HttpSvc.Initialize(ctx)
-	c.Wireguard = impl.NewWireguardService()
+	svc, err := impl.NewWGManager("wg0")
+	if err != nil {
+		slog.Warn("Init wireguard manager", "error", err)
+	}
+	c.Wireguard = svc
 	c.Wireguard.Initialize(ctx)
 
 }
